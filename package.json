@@ -1,0 +1,20 @@
+{
+  "name": "typegoose-paginate",
+  "version": "1.0.0",
+  "description": "A suite of pagination options for @typegoose/typegoose",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdacunha/typegoose-paginate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sdacunha/typegoose-paginate/issues"
+  },
+  "homepage": "https://github.com/sdacunha/typegoose-paginate#readme"
+}
