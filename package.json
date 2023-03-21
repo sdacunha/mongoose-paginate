@@ -1,7 +1,7 @@
 {
   "name": "@sdacunha/mongoose-paginate",
   "version": "1.0.0",
-  "description": "A suite of pagination options for @typegoose/typegoose",
+  "description": "Cursor-based pagination for Mongoose",
   "main": "index.js",
   "scripts": {
     "test": "jest",
