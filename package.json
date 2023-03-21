@@ -1,5 +1,5 @@
 {
-  "name": "typegoose-paginate",
+  "name": "@sdacunha/mongoose-paginate",
   "version": "1.0.0",
   "description": "A suite of pagination options for @typegoose/typegoose",
   "main": "index.js",
