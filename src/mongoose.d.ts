@@ -8,14 +8,14 @@ declare module 'mongoose' {
       filter: mongoose.FilterQuery<T>,
       projection?: mongoose.ProjectionType<T> | null | undefined,
       options?: mongoose.QueryOptions<T> | null | undefined,
-      callback?: Callback<T[]> | undefined
-    ) => Promise<PaginationResult<T>, T> | void
+      callback?: Callback<PaginationResult<T> | null> | undefined
+    ) => Promise<PaginationResult<T>> | void
   }
 
   interface Aggregate<ResultType> {
     execPaged: (
       options: PaginationOptions,
-      callback?: Callback<PaginationResult<ResultType>> | undefined,
+      callback?: Callback<PaginationResult<ResultType> | null> | undefined,
     ) => Promise<PaginationResult<ResultType>> | void
   }
 }
