@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sdacunha/typegoose-paginate.git"
+    "url": "git+https://github.com/sdacunha/mongoose-paginate.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sdacunha/typegoose-paginate/issues"
+    "url": "https://github.com/sdacunha/mongoose-paginate/issues"
   },
-  "homepage": "https://github.com/sdacunha/typegoose-paginate#readme",
+  "homepage": "https://github.com/sdacunha/mongoose-paginate#readme",
   "devDependencies": {
     "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
