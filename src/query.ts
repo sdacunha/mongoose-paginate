@@ -1,17 +1,20 @@
-import { decode } from './utils'
-import { type PaginationOptions, type SortOptions } from './types'
-import { type Expression } from 'mongoose'
+import { Expression } from "mongoose"
+import { decode } from "./utils"
+import { PaginationOptions, SortOptions } from "./types"
 
 export const normalizeSortOptions = (sortOptions?: SortOptions): SortOptions => {
   const fields = Object.keys(sortOptions ?? {})
   let newOptions: SortOptions = sortOptions ?? {}
-  if (fields.includes('_id')) {
-    const keysExceptId = fields.filter((field) => field !== '_id')
-    let newSortFields = keysExceptId.reduce((acc, field) => ({
-      ...acc,
-      [field]: newOptions[field]
-    }), {})
-    newSortFields = { ...newSortFields, _id: newOptions['_id'] }
+  if (fields.includes("_id")) {
+    const keysExceptId = fields.filter((field) => field !== "_id")
+    let newSortFields = keysExceptId.reduce(
+      (acc, field) => ({
+        ...acc,
+        [field]: newOptions[field]
+      }),
+      {}
+    )
+    newSortFields = { ...newSortFields, _id: newOptions["_id"] }
     newOptions = newSortFields
   } else if (fields.length > 0) {
     newOptions = { ...newOptions, _id: 1 }
@@ -21,30 +24,37 @@ export const normalizeSortOptions = (sortOptions?: SortOptions): SortOptions => 
   return newOptions
 }
 
-const getSortComparer = (isPrevious: boolean, val: -1 | 1 | Expression.Meta): '$gt' | '$lt' => {
+const getSortComparer = (isPrevious: boolean, val: -1 | 1 | Expression.Meta): "$gt" | "$lt" => {
   if (val === 1 || val === -1) {
     if (val === 1 || (val === -1 && isPrevious)) {
-      return '$gt'
+      return "$gt"
     }
     if (val === -1 || (val === 1 && isPrevious)) {
-      return '$lt'
+      return "$lt"
     }
   }
-  return '$lt'
+  return "$lt"
 }
 
-const generateEqualQuery = (isPrevious: boolean, index: number, key: string, fields: Record<string, 1 | -1 | Expression.Meta>, decoded: any[]): Record<string, unknown> => {
+const generateEqualQuery = (
+  isPrevious: boolean,
+  index: number,
+  key: string,
+  fields: Record<string, 1 | -1 | Expression.Meta>,
+  decoded: unknown[]
+): Record<string, unknown> => {
   const keysEqual = Object.keys(fields).slice(0, index)
 
-  const equalQuery = keysEqual.reduce((acc, field, index) => {
-    return {
+  const equalQuery = keysEqual.reduce(
+    (acc, field, idx) => ({
       ...acc,
-      [field]: decoded[index]
-    }
-  }, {})
+      [field]: decoded[idx]
+    }),
+    {}
+  )
 
   const checkQuery = {
-    [key]: { [getSortComparer(isPrevious, fields[key] as (1 | -1 | Expression.Meta))]: decoded[index] }
+    [key]: { [getSortComparer(isPrevious, fields[key] as 1 | -1 | Expression.Meta)]: decoded[index] }
   }
 
   return {
@@ -53,7 +63,7 @@ const generateEqualQuery = (isPrevious: boolean, index: number, key: string, fie
   }
 }
 
-export function generateCursorQuery (options: PaginationOptions): Record<string, unknown> {
+export function generateCursorQuery(options: PaginationOptions): Record<string, unknown> {
   if (!options.next && !options.previous) {
     return {}
   }
@@ -65,9 +75,9 @@ export function generateCursorQuery (options: PaginationOptions): Record<string,
   const decoded = decode(cursor)
   const keys = Object.keys(options.sortOptions ?? {})
 
-  const query = keys.map((key, index) => {
-    return generateEqualQuery(!!options.previous, index, key, options.sortOptions ?? {}, decoded)
-  })
+  const query = keys.map((key, index) =>
+    generateEqualQuery(!!options.previous, index, key, options.sortOptions ?? {}, decoded as unknown[])
+  )
 
   return { $or: query }
 }

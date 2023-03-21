@@ -1,13 +1,17 @@
-import { type PaginationResult, type PaginationOptions, type SortOptions } from './types'
-import { encode } from './utils'
-import get from 'lodash/get'
+import get from "lodash/get"
+import { normalizeSortOptions } from "./query"
+import { PaginationResult, PaginationOptions, SortOptions } from "./types"
+import { encode } from "./utils"
 
-export function prepareResponse<T> (
-  _docs: T[],
-  options: PaginationOptions,
-  count: number
-): PaginationResult<T> {
+function prepareCursor<T>(doc: T, sortOptions: SortOptions): string {
+  const keysExceptId = Object.keys(sortOptions).filter((key) => key !== "_id")
+  const values = keysExceptId.map((key) => get(doc, key))
+  return encode([...values, (doc as { _id: string })["_id"]])
+}
+
+export function prepareResponse<T>(_docs: T[], options: PaginationOptions, count: number): PaginationResult<T> {
   const hasMore = options.limit && _docs.length > options.limit
+  const sortOptions = normalizeSortOptions(options.sortOptions)
   if (hasMore) {
     _docs.pop()
   }
@@ -15,8 +19,8 @@ export function prepareResponse<T> (
 
   const hasPrevious = !!(options.next ?? (options.previous && hasMore))
   const hasNext = !!(options.previous ?? hasMore)
-  const next = hasNext ? prepareCursor(docs[docs.length - 1], options.sortOptions ?? {}) : undefined
-  const previous = hasPrevious ? prepareCursor(docs[0], options.sortOptions ?? {}) : undefined
+  const next = hasNext ? prepareCursor(docs[docs.length - 1], sortOptions ?? {}) : undefined
+  const previous = hasPrevious ? prepareCursor(docs[0], sortOptions ?? {}) : undefined
 
   const result: PaginationResult<T> = {
     docs,
@@ -28,13 +32,4 @@ export function prepareResponse<T> (
   }
 
   return result
-}
-
-function prepareCursor (doc: InstanceType<any>, sortOptions: SortOptions): string {
-  const keysExceptId = Object.keys(sortOptions).filter((key) => key !== '_id')
-  const values = keysExceptId.map((key) => get(key, doc))
-  return encode([
-    ...values,
-    doc._id
-  ])
 }

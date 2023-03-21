@@ -1,9 +1,22 @@
 {
     "env": {
+        "jest": true,
+        "node": true,
         "browser": true,
-        "es2021": true
+        "es6": true,
+        "mongo": true
     },
-    "extends": "standard-with-typescript",
+    "plugins": [
+        "prettier"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "airbnb",
+        "prettier"
+    ],
+    "parser": "@typescript-eslint/parser",
     "overrides": [],
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -12,9 +25,33 @@
             "./tsconfig.json"
         ]
     },
+    "settings": {
+        "react": {
+            "version": "18.0.0"
+        },
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".js",
+                    ".ts"
+                ],
+                "moduleDirectory": [
+                    "node_modules",
+                    "src/"
+                ]
+            }
+        }
+    },
     "rules": {
         "@typescript-eslint/no-invalid-void-type": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/no-floating-promises": "off"
+        "@typescript-eslint/no-floating-promises": "off",
+        "prettier/prettier": [
+            "error"
+        ],
+        "import/prefer-default-export": "off",
+        "import/extensions": "off",
+        "no-underscore-dangle": "off",
+        "dot-notation": "off"
     }
 }

@@ -1,4 +1,4 @@
-import { type Expression } from 'mongoose'
+import { type Expression } from "mongoose"
 
 export type SortOptions = Record<string, 1 | -1 | Expression.Meta>
 
